@@ -9,11 +9,12 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @ObservedObject var taskViewModel: TaskViewModel = TaskViewModel()
-    
-    @State private var pickerFilters: [String] = ["Active", "Closed"]
-    
+    @StateObject var taskViewModel: TaskViewModel = TaskViewModel()
+    @State private var pickerFilters: [String] = ["Active", "Completed"]
     @State private var defaultPickerSelectionItem: String = "Active"
+    @State private var shouldOpenAddTaskView: Bool = false
+    @State private var shouldOpenTaskDetailView: Bool = false
+    @State private var selectedTask: Task = Task(id: 0, name: "", description: "", isCompleted: false, finishDate: Date())
     
     var body: some View {
         
@@ -36,11 +37,29 @@ struct HomeView: View {
                         Spacer()
                         Text(task.finishDate.getString()).font(.subheadline)
                     }
+                }.onTapGesture {
+                    selectedTask = task
+                    shouldOpenTaskDetailView = true
                 }
             }
             .onAppear {
                 taskViewModel.getTasks(isActive: true)
             }.listStyle(.plain).navigationTitle("Home")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            shouldOpenAddTaskView = true
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+                .sheet(isPresented: $shouldOpenAddTaskView) {
+                    AddTaskView(taskViewModel: taskViewModel, shouldOpenAddTaskView: $shouldOpenAddTaskView)
+                }
+                .sheet(isPresented: $shouldOpenTaskDetailView) {
+                    DetailTaskView(taskViewModel: taskViewModel, shouldOpenDetailTaskView: $shouldOpenTaskDetailView, selectedTask: $selectedTask)
+                }
         }
         
         

@@ -19,6 +19,8 @@
 		7178E3A72BAF017F000203C8 /* TaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3A62BAF017F000203C8 /* TaskViewModel.swift */; };
 		7178E3AD2BAF132C000203C8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3AC2BAF132C000203C8 /* HomeView.swift */; };
 		7178E3B02BAF1715000203C8 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3AF2BAF1715000203C8 /* Date+Extension.swift */; };
+		7178E3B22BAF7539000203C8 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3B12BAF7539000203C8 /* AddTaskView.swift */; };
+		7178E3B62BB086B6000203C8 /* DetailTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3B52BB086B6000203C8 /* DetailTaskView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,8 @@
 		7178E3A62BAF017F000203C8 /* TaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewModel.swift; sourceTree = "<group>"; };
 		7178E3AC2BAF132C000203C8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		7178E3AF2BAF1715000203C8 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		7178E3B12BAF7539000203C8 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
+		7178E3B52BB086B6000203C8 /* DetailTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTaskView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +165,8 @@
 		7178E3AA2BAF0958000203C8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7178E3B42BB0869E000203C8 /* DetailTaskView */,
+				7178E3B32BB08690000203C8 /* AddTaskView */,
 				7178E3AB2BAF0960000203C8 /* HomeViews */,
 			);
 			path = Views;
@@ -180,6 +186,22 @@
 				7178E3AF2BAF1715000203C8 /* Date+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7178E3B32BB08690000203C8 /* AddTaskView */ = {
+			isa = PBXGroup;
+			children = (
+				7178E3B12BAF7539000203C8 /* AddTaskView.swift */,
+			);
+			path = AddTaskView;
+			sourceTree = "<group>";
+		};
+		7178E3B42BB0869E000203C8 /* DetailTaskView */ = {
+			isa = PBXGroup;
+			children = (
+				7178E3B52BB086B6000203C8 /* DetailTaskView.swift */,
+			);
+			path = DetailTaskView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,7 +337,9 @@
 				7178E3822BAEFFC8000203C8 /* TaskApp.xcdatamodeld in Sources */,
 				7178E37F2BAEFFC8000203C8 /* Persistence.swift in Sources */,
 				7178E3A52BAF006D000203C8 /* TaskModel.swift in Sources */,
+				7178E3B22BAF7539000203C8 /* AddTaskView.swift in Sources */,
 				7178E3AD2BAF132C000203C8 /* HomeView.swift in Sources */,
+				7178E3B62BB086B6000203C8 /* DetailTaskView.swift in Sources */,
 				7178E3B02BAF1715000203C8 /* Date+Extension.swift in Sources */,
 				7178E3A72BAF017F000203C8 /* TaskViewModel.swift in Sources */,
 				7178E3762BAEFFC7000203C8 /* TaskAppApp.swift in Sources */,
