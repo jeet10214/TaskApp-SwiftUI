@@ -12,6 +12,9 @@ struct DetailTaskView: View {
     @ObservedObject var taskViewModel: TaskViewModel
     @Binding var shouldOpenDetailTaskView: Bool
     @Binding var selectedTask: Task
+    @Binding var refreshTaskList: Bool
+    @State private var showDeleteAlert: Bool = false
+    
     
     var body: some View {
         NavigationStack {
@@ -28,14 +31,31 @@ struct DetailTaskView: View {
                 
                 Section {
                     Button {
+                        showDeleteAlert.toggle()
                         
                     } label: {
                         Text("Delete task")
                             .fontWeight(.bold)
                             .foregroundColor(.red)
                             .frame(maxWidth: .infinity, alignment: .center)
+                    }.alert("Delete Task", isPresented: $showDeleteAlert) {
+                        Button {
+                            shouldOpenDetailTaskView = false
+                        } label: {
+                            Text("No")
+                        }
+                        
+                        Button(role: .destructive) {
+                            if taskViewModel.deleteTask(task: selectedTask) {
+                                shouldOpenDetailTaskView.toggle()
+                                refreshTaskList.toggle()
+                            }
+                        } label: {
+                            Text("Yes")
+                        }
+                    } message: {
+                        Text("Are you sure you want to delete the \(selectedTask.name) task?")
                     }
-
                 }
             }.navigationTitle("Task Detail")
                 .toolbar {
@@ -50,10 +70,13 @@ struct DetailTaskView: View {
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
-                            
+                            if taskViewModel.updateTask(task: selectedTask) {
+                                shouldOpenDetailTaskView.toggle()
+                                refreshTaskList.toggle()
+                            }
                         } label: {
                             Text("Update")
-                        }
+                        }.disabled(selectedTask.name.isEmpty)
                         
                     }
                 }
@@ -63,6 +86,6 @@ struct DetailTaskView: View {
 
 struct DetailTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailTaskView(taskViewModel: TaskViewModel(), shouldOpenDetailTaskView: .constant(false), selectedTask: .constant(Task.createMockTests().first!))
+        DetailTaskView(taskViewModel: TaskViewModel(), shouldOpenDetailTaskView: .constant(false), selectedTask: .constant(Task.createMockTests().first!), refreshTaskList: .constant(false))
     }
 }
