@@ -9,12 +9,12 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @StateObject var taskViewModel: TaskViewModel = TaskViewModel()
+    @StateObject var taskViewModel: TaskViewModel = TaskViewModelFactory.createTaskViewModel()
     @State private var pickerFilters: [String] = ["Active", "Completed"]
     @State private var defaultPickerSelectionItem: String = "Active"
     @State private var shouldOpenAddTaskView: Bool = false
     @State private var shouldOpenTaskDetailView: Bool = false
-    @State private var selectedTask: Task = Task(id: 0, name: "", description: "", isCompleted: false, finishDate: Date())
+    @State private var selectedTask: Task = Task.createEmptyTask()
     @State private var refreshTaskList: Bool = false
     
     var body: some View {
@@ -27,7 +27,7 @@ struct HomeView: View {
                 }
             }.pickerStyle(.segmented)
                 .onChange(of: defaultPickerSelectionItem) { newValue in
-                    taskViewModel.getTasks(isActive: defaultPickerSelectionItem == "Active")
+                    taskViewModel.getTasks(isCompleted: defaultPickerSelectionItem == "Active")
                 }
             
             List(taskViewModel.tasks, id: \.id) { task in
@@ -44,9 +44,9 @@ struct HomeView: View {
                 }
             }
             .onAppear {
-                taskViewModel.getTasks(isActive: true)
+                taskViewModel.getTasks(isCompleted: true)
             }.onChange(of: refreshTaskList, perform: { _ in
-                taskViewModel.getTasks(isActive: defaultPickerSelectionItem == "Active")
+                taskViewModel.getTasks(isCompleted: defaultPickerSelectionItem == "Active")
             })
             .listStyle(.plain).navigationTitle("Home")
                 .toolbar {

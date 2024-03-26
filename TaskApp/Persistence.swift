@@ -7,12 +7,13 @@
 
 import CoreData
 
-struct PersistenceController {
+class PersistenceController {
     static let shared = PersistenceController()
 
-    let container: NSPersistentContainer
+    private let container: NSPersistentContainer
+    let viewContext: NSManagedObjectContext
 
-    init(inMemory: Bool = false) {
+    private init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "TaskApp")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -23,5 +24,6 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+        viewContext = container.viewContext
     }
 }
