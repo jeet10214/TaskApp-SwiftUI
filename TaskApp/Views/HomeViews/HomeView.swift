@@ -47,6 +47,13 @@ struct HomeView: View {
                 taskViewModel.getTasks(isCompleted: true)
             }.onChange(of: refreshTaskList, perform: { _ in
                 taskViewModel.getTasks(isCompleted: defaultPickerSelectionItem == "Active")
+            }).alert("Task Error", isPresented: $taskViewModel.showError, actions: {
+                Button(action: {}) {
+                    Text("Okay")
+                }
+
+            }, message: {
+                Text(taskViewModel.errorMessage)
             })
             .listStyle(.plain).navigationTitle("Home")
                 .toolbar {

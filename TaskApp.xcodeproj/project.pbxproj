@@ -25,6 +25,7 @@
 		7178E3BA2BB1D6E5000203C8 /* TaskEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3B82BB1D6E5000203C8 /* TaskEntity+CoreDataProperties.swift */; };
 		7178E3BE2BB1D78B000203C8 /* TaskRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3BD2BB1D78B000203C8 /* TaskRepository.swift */; };
 		7178E3C02BB34FE9000203C8 /* TaskViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3BF2BB34FE8000203C8 /* TaskViewModelFactory.swift */; };
+		7178E3C32BB85D35000203C8 /* TaskRepositoryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3C22BB85D35000203C8 /* TaskRepositoryError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		7178E3B82BB1D6E5000203C8 /* TaskEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7178E3BD2BB1D78B000203C8 /* TaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepository.swift; sourceTree = "<group>"; };
 		7178E3BF2BB34FE8000203C8 /* TaskViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewModelFactory.swift; sourceTree = "<group>"; };
+		7178E3C22BB85D35000203C8 /* TaskRepositoryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepositoryError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,9 +229,18 @@
 		7178E3BC2BB1D76E000203C8 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				7178E3C42BB85D51000203C8 /* RepostoryError */,
 				7178E3BD2BB1D78B000203C8 /* TaskRepository.swift */,
 			);
 			path = Repository;
+			sourceTree = "<group>";
+		};
+		7178E3C42BB85D51000203C8 /* RepostoryError */ = {
+			isa = PBXGroup;
+			children = (
+				7178E3C22BB85D35000203C8 /* TaskRepositoryError.swift */,
+			);
+			path = RepostoryError;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -374,6 +385,7 @@
 				7178E3B02BAF1715000203C8 /* Date+Extension.swift in Sources */,
 				7178E3A72BAF017F000203C8 /* TaskViewModel.swift in Sources */,
 				7178E3762BAEFFC7000203C8 /* TaskAppApp.swift in Sources */,
+				7178E3C32BB85D35000203C8 /* TaskRepositoryError.swift in Sources */,
 				7178E3B92BB1D6E5000203C8 /* TaskEntity+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

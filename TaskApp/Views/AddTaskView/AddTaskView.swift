@@ -39,6 +39,14 @@ struct AddTaskView: View {
                     DatePicker("Task Date", selection: $taskToAdd.finishDate, in: pickerDateRange)
                 }
             }.navigationTitle("Add task")
+                .alert("Task Error", isPresented: $taskViewModel.showError, actions: {
+                    Button(action: {}) {
+                        Text("Okay")
+                    }
+
+                }, message: {
+                    Text(taskViewModel.errorMessage)
+                })
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {

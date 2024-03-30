@@ -9,35 +9,36 @@ import Foundation
 import CoreData
 
 protocol TaskRepository {
-    func get(isCompleted: Bool) -> [Task]
-    func add(task: Task) -> Bool
-    func update(task: Task) -> Bool
-    func delete(task: Task) -> Bool
+    func get(isCompleted: Bool) -> Result<[Task], TaskRepositoryError>
+    func add(task: Task) -> Result<Bool, TaskRepositoryError>
+    func update(task: Task) -> Result<Bool, TaskRepositoryError>
+    func delete(task: Task) -> Result<Bool, TaskRepositoryError>
 }
 
 final class TaskRepositoryImplementation: TaskRepository {
     
     private let managedObjectContext: NSManagedObjectContext = PersistenceController.shared.viewContext
     
-    func get(isCompleted: Bool) -> [Task] {
+    func get(isCompleted: Bool) -> Result<[Task], TaskRepositoryError> {
         let fetchRequest = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "isCompleted == %@", NSNumber(value: isCompleted))
         
         do {
             let result = try managedObjectContext.fetch(fetchRequest)
             if !result.isEmpty {
-                return result.map { taskEntity in
+                return .success(result.map { taskEntity in
                     Task(id: taskEntity.id ?? UUID(), name: taskEntity.name ?? "", description: taskEntity.taskDescription ?? "", isCompleted: taskEntity.isCompleted , finishDate: taskEntity.finishDate ?? Date())
-                }
+                })
             }
+            return .success([])
         } catch {
             debugPrint("error in coredata \(error.localizedDescription)")
+            return .failure(TaskRepositoryError.operationFailure("Unable to fetch records. Please try again later or contact support"))
         }
-        
-        return []
     }
     
-    func add(task: Task) -> Bool {
+    func add(task: Task) -> Result<Bool, TaskRepositoryError> {
+        
         let taskEntity = TaskEntity(context: managedObjectContext)
         taskEntity.id = UUID()
         taskEntity.isCompleted = task.isCompleted
@@ -47,15 +48,15 @@ final class TaskRepositoryImplementation: TaskRepository {
         
         do {
             try managedObjectContext.save()
-            return true
+            return .success(true)
         } catch {
+            managedObjectContext.rollback()
             debugPrint("Exception \(error.localizedDescription)")
+            return .failure(TaskRepositoryError.operationFailure("Unable to add task"))
         }
-        
-        return false
     }
     
-    func update(task: Task) -> Bool {
+    func update(task: Task) -> Result<Bool, TaskRepositoryError> {
         let fetchRequest = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", task.id as CVarArg)
         
@@ -67,16 +68,19 @@ final class TaskRepositoryImplementation: TaskRepository {
                 existingTask.isCompleted = task.isCompleted
                 
                 try managedObjectContext.save()
-                return true
+                return .success(true)
+            } else {
+                return   .failure(TaskRepositoryError.operationFailure("Unable to update record as id was not found."))
             }
+              
         } catch {
+            managedObjectContext.rollback()
             debugPrint("Exception \(error.localizedDescription)")
+            return .failure(TaskRepositoryError.operationFailure("Unable to update record as id was not found."))
         }
-        
-        return false
     }
     
-    func delete(task: Task) -> Bool {
+    func delete(task: Task) -> Result<Bool, TaskRepositoryError> {
         let fetchRequest = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", task.id as CVarArg)
         
@@ -85,13 +89,14 @@ final class TaskRepositoryImplementation: TaskRepository {
                 managedObjectContext.delete(existingTask)
                
                 try managedObjectContext.save()
-                return true
+                return .success(true)
+            } else {
+                return .failure(TaskRepositoryError.operationFailure("Unable to delete record as id was not found."))
             }
         } catch {
+            managedObjectContext.rollback()
             debugPrint("Exception \(error.localizedDescription)")
+            return .failure(TaskRepositoryError.operationFailure("Unable to delete task."))
         }
-        
-        return false
     }
-    
 }
