@@ -26,6 +26,7 @@
 		7178E3BE2BB1D78B000203C8 /* TaskRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3BD2BB1D78B000203C8 /* TaskRepository.swift */; };
 		7178E3C02BB34FE9000203C8 /* TaskViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3BF2BB34FE8000203C8 /* TaskViewModelFactory.swift */; };
 		7178E3C32BB85D35000203C8 /* TaskRepositoryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3C22BB85D35000203C8 /* TaskRepositoryError.swift */; };
+		7178E3C62BC1C723000203C8 /* PickerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7178E3C52BC1C723000203C8 /* PickerComponent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		7178E3BD2BB1D78B000203C8 /* TaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepository.swift; sourceTree = "<group>"; };
 		7178E3BF2BB34FE8000203C8 /* TaskViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewModelFactory.swift; sourceTree = "<group>"; };
 		7178E3C22BB85D35000203C8 /* TaskRepositoryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepositoryError.swift; sourceTree = "<group>"; };
+		7178E3C52BC1C723000203C8 /* PickerComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerComponent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +183,7 @@
 				7178E3B42BB0869E000203C8 /* DetailTaskView */,
 				7178E3B32BB08690000203C8 /* AddTaskView */,
 				7178E3AB2BAF0960000203C8 /* HomeViews */,
+				7178E3C52BC1C723000203C8 /* PickerComponent.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				7178E3B22BAF7539000203C8 /* AddTaskView.swift in Sources */,
 				7178E3BA2BB1D6E5000203C8 /* TaskEntity+CoreDataProperties.swift in Sources */,
 				7178E3C02BB34FE9000203C8 /* TaskViewModelFactory.swift in Sources */,
+				7178E3C62BC1C723000203C8 /* PickerComponent.swift in Sources */,
 				7178E3AD2BAF132C000203C8 /* HomeView.swift in Sources */,
 				7178E3B62BB086B6000203C8 /* DetailTaskView.swift in Sources */,
 				7178E3B02BAF1715000203C8 /* Date+Extension.swift in Sources */,

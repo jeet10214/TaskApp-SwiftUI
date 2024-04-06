@@ -12,7 +12,6 @@ struct AddTaskView: View {
     @ObservedObject var taskViewModel: TaskViewModel
     @State private var taskToAdd: Task = Task.createEmptyTask()
     @Binding var shouldOpenAddTaskView: Bool
-    @Binding var refreshTaskList: Bool
     @State private var showDirtyCheckAlert: Bool = false
     
     var pickerDateRange: ClosedRange<Date> {
@@ -38,7 +37,13 @@ struct AddTaskView: View {
                 Section("Task date/time") {
                     DatePicker("Task Date", selection: $taskToAdd.finishDate, in: pickerDateRange)
                 }
-            }.navigationTitle("Add task")
+            }
+            .onReceive(taskViewModel.shouldDismiss, perform: { shouldDismiss in
+                if shouldDismiss {
+                    shouldOpenAddTaskView.toggle()
+                }
+            })
+            .navigationTitle("Add task")
                 .alert("Task Error", isPresented: $taskViewModel.showError, actions: {
                     Button(action: {}) {
                         Text("Okay")
@@ -46,6 +51,9 @@ struct AddTaskView: View {
 
                 }, message: {
                     Text(taskViewModel.errorMessage)
+                })
+                .onDisappear(perform: {
+                    taskViewModel.cancelSubscribtion()
                 })
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -88,15 +96,15 @@ struct AddTaskView: View {
     }
     
     private func addTask() {
-        if taskViewModel.addTask(task: taskToAdd) {
-            shouldOpenAddTaskView.toggle()
-            refreshTaskList.toggle()
-        }
+        taskViewModel.addTask(task: taskToAdd)
+//        if  {
+//            shouldOpenAddTaskView.toggle()
+//        }
     }
 }
 
 struct AddTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTaskView(taskViewModel: TaskViewModelFactory.createTaskViewModel(), shouldOpenAddTaskView: .constant(false), refreshTaskList: .constant(false))
+        AddTaskView(taskViewModel: TaskViewModelFactory.createTaskViewModel(), shouldOpenAddTaskView: .constant(false))
     }
 }

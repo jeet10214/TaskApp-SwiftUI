@@ -12,7 +12,6 @@ struct DetailTaskView: View {
     @ObservedObject var taskViewModel: TaskViewModel
     @Binding var shouldOpenDetailTaskView: Bool
     @Binding var selectedTask: Task
-    @Binding var refreshTaskList: Bool
     @State private var showDeleteAlert: Bool = false
     
     
@@ -46,10 +45,7 @@ struct DetailTaskView: View {
                         }
                         
                         Button(role: .destructive) {
-                            if taskViewModel.deleteTask(task: selectedTask) {
-                                shouldOpenDetailTaskView.toggle()
-                                refreshTaskList.toggle()
-                            }
+                            taskViewModel.deleteTask(task: selectedTask)
                         } label: {
                             Text("Yes")
                         }
@@ -57,7 +53,13 @@ struct DetailTaskView: View {
                         Text("Are you sure you want to delete the \(selectedTask.name) task?")
                     }
                 }
-            }.navigationTitle("Task Detail")
+            }
+            .onReceive(taskViewModel.shouldDismiss, perform: { shouldDismiss in
+                if shouldDismiss {
+                    shouldOpenDetailTaskView.toggle()
+                }
+            })
+            .navigationTitle("Task Detail")
                 .alert("Task Error", isPresented: $taskViewModel.showError, actions: {
                     Button(action: {}) {
                         Text("Okay")
@@ -65,6 +67,9 @@ struct DetailTaskView: View {
 
                 }, message: {
                     Text(taskViewModel.errorMessage)
+                })
+                .onDisappear(perform: {
+                    taskViewModel.cancelSubscribtion()
                 })
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -78,10 +83,7 @@ struct DetailTaskView: View {
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
-                            if taskViewModel.updateTask(task: selectedTask) {
-                                shouldOpenDetailTaskView.toggle()
-                                refreshTaskList.toggle()
-                            }
+                            taskViewModel.updateTask(task: selectedTask)
                         } label: {
                             Text("Update")
                         }.disabled(selectedTask.name.isEmpty)
@@ -94,6 +96,6 @@ struct DetailTaskView: View {
 
 struct DetailTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailTaskView(taskViewModel: TaskViewModelFactory.createTaskViewModel(), shouldOpenDetailTaskView: .constant(false), selectedTask: .constant(Task.createEmptyTask()), refreshTaskList: .constant(false))
+        DetailTaskView(taskViewModel: TaskViewModelFactory.createTaskViewModel(), shouldOpenDetailTaskView: .constant(false), selectedTask: .constant(Task.createEmptyTask()))
     }
 }

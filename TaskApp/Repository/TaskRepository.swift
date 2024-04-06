@@ -7,37 +7,39 @@
 
 import Foundation
 import CoreData
+import Combine
 
 protocol TaskRepository {
-    func get(isCompleted: Bool) -> Result<[Task], TaskRepositoryError>
-    func add(task: Task) -> Result<Bool, TaskRepositoryError>
-    func update(task: Task) -> Result<Bool, TaskRepositoryError>
-    func delete(task: Task) -> Result<Bool, TaskRepositoryError>
+    func get(isCompleted: Bool) -> AnyPublisher<Result<[Task], TaskRepositoryError>, Never>
+    func add(task: Task) -> AnyPublisher<Result<Bool, TaskRepositoryError>, Never>
+    func update(task: Task) -> AnyPublisher<Result<Bool, TaskRepositoryError>, Never>
+    func delete(task: Task) -> AnyPublisher<Result<Bool, TaskRepositoryError>, Never>
 }
 
 final class TaskRepositoryImplementation: TaskRepository {
     
     private let managedObjectContext: NSManagedObjectContext = PersistenceController.shared.viewContext
     
-    func get(isCompleted: Bool) -> Result<[Task], TaskRepositoryError> {
+    func get(isCompleted: Bool) -> AnyPublisher<Result<[Task], TaskRepositoryError>, Never> {
         let fetchRequest = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "isCompleted == %@", NSNumber(value: isCompleted))
         
         do {
             let result = try managedObjectContext.fetch(fetchRequest)
             if !result.isEmpty {
-                return .success(result.map { taskEntity in
+                let clientContract = result.map { taskEntity in
                     Task(id: taskEntity.id ?? UUID(), name: taskEntity.name ?? "", description: taskEntity.taskDescription ?? "", isCompleted: taskEntity.isCompleted , finishDate: taskEntity.finishDate ?? Date())
-                })
+                }
+                return Just(.success(clientContract)).eraseToAnyPublisher()
             }
-            return .success([])
+            return Just(.success([])).eraseToAnyPublisher()
         } catch {
             debugPrint("error in coredata \(error.localizedDescription)")
-            return .failure(TaskRepositoryError.operationFailure("Unable to fetch records. Please try again later or contact support"))
+            return Just(.failure(TaskRepositoryError.operationFailure("Unable to fetch records. Please try again later or contact support"))).eraseToAnyPublisher()
         }
     }
     
-    func add(task: Task) -> Result<Bool, TaskRepositoryError> {
+    func add(task: Task) -> AnyPublisher<Result<Bool, TaskRepositoryError>, Never> {
         
         let taskEntity = TaskEntity(context: managedObjectContext)
         taskEntity.id = UUID()
@@ -48,15 +50,15 @@ final class TaskRepositoryImplementation: TaskRepository {
         
         do {
             try managedObjectContext.save()
-            return .success(true)
+            return Just(.success(true)).eraseToAnyPublisher()
         } catch {
             managedObjectContext.rollback()
             debugPrint("Exception \(error.localizedDescription)")
-            return .failure(TaskRepositoryError.operationFailure("Unable to add task"))
+            return Just(.failure(TaskRepositoryError.operationFailure("Unable to add task"))).eraseToAnyPublisher()
         }
     }
     
-    func update(task: Task) -> Result<Bool, TaskRepositoryError> {
+    func update(task: Task) -> AnyPublisher<Result<Bool, TaskRepositoryError>, Never> {
         let fetchRequest = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", task.id as CVarArg)
         
@@ -68,19 +70,19 @@ final class TaskRepositoryImplementation: TaskRepository {
                 existingTask.isCompleted = task.isCompleted
                 
                 try managedObjectContext.save()
-                return .success(true)
+                return Just(.success(true)).eraseToAnyPublisher()
             } else {
-                return   .failure(TaskRepositoryError.operationFailure("Unable to update record as id was not found."))
+                return Just(.failure(TaskRepositoryError.operationFailure("Unable to update record as id was not found."))).eraseToAnyPublisher()
             }
               
         } catch {
             managedObjectContext.rollback()
             debugPrint("Exception \(error.localizedDescription)")
-            return .failure(TaskRepositoryError.operationFailure("Unable to update record as id was not found."))
+            return Just(.failure(TaskRepositoryError.operationFailure("Unable to update record as id was not found."))).eraseToAnyPublisher()
         }
     }
     
-    func delete(task: Task) -> Result<Bool, TaskRepositoryError> {
+    func delete(task: Task) -> AnyPublisher<Result<Bool, TaskRepositoryError>, Never> {
         let fetchRequest = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", task.id as CVarArg)
         
@@ -89,14 +91,14 @@ final class TaskRepositoryImplementation: TaskRepository {
                 managedObjectContext.delete(existingTask)
                
                 try managedObjectContext.save()
-                return .success(true)
+                return Just(.success(true)).eraseToAnyPublisher()
             } else {
-                return .failure(TaskRepositoryError.operationFailure("Unable to delete record as id was not found."))
+                return Just(.failure(TaskRepositoryError.operationFailure("Unable to delete record as id was not found."))).eraseToAnyPublisher()
             }
         } catch {
             managedObjectContext.rollback()
             debugPrint("Exception \(error.localizedDescription)")
-            return .failure(TaskRepositoryError.operationFailure("Unable to delete task."))
+            return Just(.failure(TaskRepositoryError.operationFailure("Unable to delete task."))).eraseToAnyPublisher()
         }
     }
 }
